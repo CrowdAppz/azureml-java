@@ -74,7 +74,7 @@ public class AzureMLClient {
 
     // ================ Private Methods ===================================== //
     private String calculateAuthValue() {
-        return new String(Base64.encodeBase64(("AccountKey:" + accountKey).getBytes()));
+        return "Basic " + new String(Base64.encodeBase64(("AccountKey:" + accountKey).getBytes()));
     }
 
     // ================ Getter & Setter ===================================== //
@@ -85,23 +85,23 @@ public class AzureMLClient {
     // ================ Inner & Anonymous Classes =========================== //
     private class LanguageBatchRequest {
 
-        @SerializedName("InputTexts")
+        @SerializedName("Inputs")
         @Expose
-        private List<InputText> inputTexts = new ArrayList<>();
+        private List<InputText> inputs = new ArrayList<>();
 
         public LanguageBatchRequest() {
         }
 
-        public LanguageBatchRequest(List<InputText> inputTexts) {
-            this.inputTexts = inputTexts;
+        public LanguageBatchRequest(List<InputText> inputs) {
+            this.inputs = inputs;
         }
 
-        public List<InputText> getInputTexts() {
-            return inputTexts;
+        public List<InputText> getInputs() {
+            return inputs;
         }
 
-        public void setInputTexts(List<InputText> inputTexts) {
-            this.inputTexts = inputTexts;
+        public void setInputs(List<InputText> inputs) {
+            this.inputs = inputs;
         }
     }
 }
