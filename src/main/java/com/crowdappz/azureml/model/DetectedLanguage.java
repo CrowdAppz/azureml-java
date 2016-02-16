@@ -5,27 +5,30 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class DetectedLanguage {
+
     // ================ Constants =========================================== //
 
     // ================ Members ============================================= //
     @SerializedName("Name")
     @Expose
-    private String Name;
+    private String name;
+
     @SerializedName("Iso6391Name")
     @Expose
-    private String Iso6391Name;
+    private String iso6391Name;
+
     @SerializedName("Score")
     @Expose
-    private Double Score;
+    private Double score;
 
     // ================ Constructors & Main ================================= //
     public DetectedLanguage() {
     }
 
-    public DetectedLanguage(String Name, String Iso6391Name, Double Score) {
-        this.Name = Name;
-        this.Iso6391Name = Iso6391Name;
-        this.Score = Score;
+    public DetectedLanguage(String name, String iso6391Name, Double score) {
+        this.name = name;
+        this.iso6391Name = iso6391Name;
+        this.score = score;
     }
 
     // ================ Methods for/from SuperClass / Interfaces ============ //
@@ -36,42 +39,42 @@ public class DetectedLanguage {
 
     // ================ Getter & Setter ===================================== //
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIso6391Name() {
-        return Iso6391Name;
+        return iso6391Name;
     }
 
-    public void setIso6391Name(String Iso6391Name) {
-        this.Iso6391Name = Iso6391Name;
+    public void setIso6391Name(String iso6391Name) {
+        this.iso6391Name = iso6391Name;
     }
 
     public Double getScore() {
-        return Score;
+        return score;
     }
 
-    public void setScore(Double Score) {
-        this.Score = Score;
+    public void setScore(Double score) {
+        this.score = score;
     }
 
     // ================ Builder Pattern ===================================== //
-    public DetectedLanguage withName(String Name) {
-        this.Name = Name;
+    public DetectedLanguage withName(String name) {
+        setName(name);
         return this;
     }
 
-    public DetectedLanguage withScore(Double Score) {
-        this.Score = Score;
+    public DetectedLanguage withScore(Double score) {
+        setScore(score);
         return this;
     }
 
-    public DetectedLanguage withIso6391Name(String Iso6391Name) {
-        this.Iso6391Name = Iso6391Name;
+    public DetectedLanguage withIso6391Name(String iso6391Name) {
+        setIso6391Name(iso6391Name);
         return this;
     }
 
