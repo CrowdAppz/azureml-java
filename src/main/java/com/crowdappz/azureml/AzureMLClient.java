@@ -1,3 +1,5 @@
+package com.crowdappz.azureml;
+
 import com.crowdappz.azureml.model.InputText;
 import com.crowdappz.azureml.model.LanguageBatchResponse;
 import com.crowdappz.azureml.model.LanguageResponse;
