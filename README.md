@@ -1,6 +1,10 @@
 # azureml-java
 A Java Client Library for Azure Machine Learning APIs
 
+[API documentation](https://azure.microsoft.com/en-us/documentation/articles/machine-learning-apps-text-analytics/)
+
+[Demo Website](https://text-analytics-demo.azurewebsites.net)
+
 ## Usage
 
 Create an instance of the AzureMLClient
