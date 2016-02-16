@@ -1,6 +1,7 @@
 package com.crowdappz.azureml;
 
 import com.crowdappz.azureml.model.InputText;
+import com.crowdappz.azureml.model.KeyPhraseBatchResponse;
 import com.crowdappz.azureml.model.LanguageBatchResponse;
 import com.crowdappz.azureml.model.LanguageResponse;
 import com.google.gson.Gson;
@@ -21,8 +22,11 @@ import java.util.List;
 public class AzureMLClient {
 
     // ================ Constants =========================================== //
+    private static final String GET_KEYPHRASES_URL = "https://api.datamarket.azure.com/data.ashx/amla/text-analytics/v1/GetKeyPhrases";
+    private static final String GET_KEYPHRASES_BATCH_URL = "https://api.datamarket.azure.com/data.ashx/amla/text-analytics/v1/GetKeyPhrasesBatch";
     private static final String GET_LANGUAGE_URL = "https://api.datamarket.azure.com/data.ashx/amla/text-analytics/v1/GetLanguage";
     private static final String GET_LANGUAGE_BATCH_URL = "https://api.datamarket.azure.com/data.ashx/amla/text-analytics/v1/GetLanguageBatch";
+
     private static final String APPLICATION_JSON = "application/json";
 
     private static final Gson gson = new Gson();
@@ -46,7 +50,7 @@ public class AzureMLClient {
      * Our implementation chooses to do so because of URL-parameter limitations (size and characters)
      */
     public LanguageResponse getLanugage(String inputText) {
-        LanguageBatchResponse response = getLanguageBatch(Collections.singletonList(new InputText().withText(inputText)));
+        LanguageBatchResponse response = getLanguageBatch(Collections.singletonList(new InputText().withId("0").withText(inputText)));
         if (response.getLanguageResponses() == null || response.getLanguageResponses().get(0) == null
                 || (response.getLanguageResponses().get(0).getUnknownLanguage() != null
                 && response.getLanguageResponses().get(0).getUnknownLanguage())) {
@@ -58,13 +62,38 @@ public class AzureMLClient {
     public LanguageBatchResponse getLanguageBatch(List<InputText> inputTexts) {
         try {
             HttpResponse<String> response = Unirest.post(GET_LANGUAGE_BATCH_URL)
-                                                   .body(gson.toJson(new LanguageBatchRequest(inputTexts)))
+                                                   .body(gson.toJson(new BatchRequest(inputTexts)))
                                                    .getHttpRequest()
                                                    .header(HttpHeaders.AUTHORIZATION, authValue)
                                                    .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
                                                    .asString();
             if (response.getStatus() == HttpStatus.SC_OK) {
                 return gson.fromJson(response.getBody(), LanguageBatchResponse.class);
+            }
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<String> getKeyPhrases(String inputText) {
+        KeyPhraseBatchResponse response = getKeyPhrasesBatch(Collections.singletonList(new InputText().withId("0").withText(inputText)));
+        if (response == null || response.getKeyPhrases() == null || response.getKeyPhrases().get(0) == null) {
+            return null;
+        }
+        return response.getKeyPhrases().get(0).getKeyPhrases();
+    }
+
+    public KeyPhraseBatchResponse getKeyPhrasesBatch(List<InputText> inputTexts) {
+        try {
+            HttpResponse<String> response = Unirest.post(GET_KEYPHRASES_BATCH_URL)
+                                                   .body(gson.toJson(new BatchRequest(inputTexts)))
+                                                   .getHttpRequest()
+                                                   .header(HttpHeaders.AUTHORIZATION, authValue)
+                                                   .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
+                                                   .asString();
+            if (response.getStatus() == HttpStatus.SC_OK) {
+                return gson.fromJson(response.getBody(), KeyPhraseBatchResponse.class);
             }
         } catch (UnirestException e) {
             e.printStackTrace();
@@ -83,16 +112,16 @@ public class AzureMLClient {
 
 
     // ================ Inner & Anonymous Classes =========================== //
-    private class LanguageBatchRequest {
+    private class BatchRequest {
 
         @SerializedName("Inputs")
         @Expose
         private List<InputText> inputs = new ArrayList<>();
 
-        public LanguageBatchRequest() {
+        public BatchRequest() {
         }
 
-        public LanguageBatchRequest(List<InputText> inputs) {
+        public BatchRequest(List<InputText> inputs) {
             this.inputs = inputs;
         }
 
